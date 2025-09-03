@@ -2,23 +2,23 @@
 
 namespace Database\Seeders;
 
-use GuzzleHttp\Psr7\Request;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsersSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Jalankan seeder untuk tabel users.
      */
     public function run(): void
     {
-        // insert into user
-        User::create([
-            'name'  => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => '12345678'
+        DB::table('users')->insert([
+            'name' => 'Admin Perpus',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('12345678'), // ✅ bcrypt hash
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }

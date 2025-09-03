@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\AnggotaController;
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,4 +50,10 @@ Route::middleware('auth')->group(function () {
     route::delete('buku/destroy/{id}', [\App\Http\Controllers\BookController::class, 'destroy'])->name('buku.destroy');
     route::get('buku/edit/{id}', [\App\Http\Controllers\BookController::class, 'edit'])->name('buku.edit');
     route::put('buku/update/{id}', [\App\Http\Controllers\BookController::class, 'update'])->name('buku.update');
+
+
+    Route::resource('transaction', \App\Http\Controllers\TransactionController::class);
+    Route::get('get-buku/{$id}',[\App\Http\Controllers\TransactionController::class,'getBukuByIdCategory']);
+    
+
 });
