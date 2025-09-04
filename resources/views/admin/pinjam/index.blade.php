@@ -19,20 +19,22 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($borrows as $index => $borrow )
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{$index  +1 }}</td>
+                            <td>{{$borrow->trans_number}}</td>
+                            <td>{{$borrow->member->nama_anggota}}</td>
+                            <td>{{\Carbon\Carbon::parse($borrow->return_date)->format('d-M-Y') }}</td>
                             <td>
-                                <a href="" class="btn btn-success btn-sm">
-                                    <i class="bi bi-pencil"></i>
+                                <a href="{{route('transaction.show',$borrow->id)}}" class="btn btn-success btn-sm">
+                                    <i class="bi bi-eye"></i>
                                 </a>
                                  <a href="" class="btn btn-danger btn-sm">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
 

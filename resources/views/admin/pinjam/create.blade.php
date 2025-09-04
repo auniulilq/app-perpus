@@ -5,11 +5,11 @@
         <div class="card-body">
             <h3 class="card-title">{{ $title ?? '' }}</h3>
 
-            <form action="" method="post">
+            <form action="{{route('transaction.store')}}" method="post">
                 @csrf
 
                 <div class="row">
-
+<div class="col-sm-6">
                     <div class="mb-3 row">
                         <div class="col-sm-3">
                             <label for="" class="form-label">No Transaksi</label>
@@ -60,10 +60,29 @@
                     </div>
                     
                 </div>
+                <div class="col-sm-6">
+                    <div class="mb-3 row">
+                        <div class="col-sm-3">
+                            <label for="" class="form-label">Tanggal Pengembalian</label>
+                        </div>
+                        <div class="col-sm-7 mb-3">
+                            <input type="date" class="form-control" name="return_date" >
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-3">
+                            <label for="" class="form-label">Catatan</label>
+                        </div>
+                        <div class="col-sm-7 mb-3">
+                            <textarea name="note" id="" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-sm-12 mt-5">
                     <div align="right" class="mb-3">
                         <button type="button" id="addRow" class="btn btn-primary">Tambah Row</button>
                     </div>
+                     </div>
                     <table class="table table-bordered" id="tableTrans">
                         <thead>
                             <tr>
@@ -75,6 +94,7 @@
                         <tbody></tbody>
                     </table>
                 </div>
+                 <button class="mt-3 btn btn-success">Simpan</button>
             </form>
         </div>
     </div>

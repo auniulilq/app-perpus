@@ -87,35 +87,39 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
    <script>
    
-        let category = document.getElementById('id_kategori');
-        category.addEventListener('change', async function() {
-            const id_category = this.value; //selector id_category, mau ambil value
-            const selectBuku = document.querySelector('#id_buku');
-            selectBuku.innerHTML = "<option value=''>Pilih Buku...</option>"
+       let category = document.getElementById('id_kategori');
+category.addEventListener('change', async function() {
+    const id_category = this.value; 
+    const selectBuku = document.querySelector('#id_buku');
 
-            if (!category) {
-                selectBuku.innerHTML = "<option value=''>Pilih Buku...</option>"
-                return;
-            }
+    // reset dulu isi dropdown buku
+    selectBuku.innerHTML = "<option value=''>Pilih Buku...</option>";
 
-            try {
-                const res = await fetch(`/get-buku/${id_category}`);
-                const data = await res.json();
-                data.data.forEach(buku => {
-                    const option = document.createElement('option');
-                    option.value = buku.id;
-                    option.textContent = buku.judul;
-                    selectBuku.appendChild(option);
-                })
-            } catch (error) {
-                console.log('error fetch buku', error);
-            }
+    // kalau kategori belum dipilih, stop
+    if (!id_category) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`/get-buku/${id_category}`);
+        const data = await res.json();
+
+        data.data.forEach(buku => {
+            const option = document.createElement('option');
+            option.value = buku.id;          // value = id buku
+            option.textContent = buku.judul; // teks = judul buku
+            selectBuku.appendChild(option);
         });
+    } catch (error) {
+        console.log('error fetch buku', error);
+    }
+});
+
     </script>
     <script>
   let count = 1;
  
- {{--  {{--  document.querySelector('#addRow').addEventListener('click',function(){
+ //{{--  {{--  document.querySelector('#addRow').addEventListener('click',function(){
      {{--  const tbody = document.querySelector('#tableTrans tbody');
      const selectBook = document.querySelector('#id_buku').value;
      const bookName = selectBook.options[selectBook.selectedIndex]?.text||'';
@@ -143,28 +147,43 @@
             tbody.appendChild(tr);  --}}
        //});
 
-        document.getElementById('addRow').addEventListener('click',function(){
-            const tbody = document.querySelector('#tableTrans tbody');
-            const selectBook = document.getElementById('id_buku');
-            const idBook = selectBook.value;
-            const NameBook = selectBook.options [selectBook.selectedIndex]?.text||'';
+        document.getElementById('addRow').addEventListener('click', function () {
+    const tbody = document.querySelector('#tableTrans tbody');
+    const selectBook = document.getElementById('id_buku');
+    const idBook = selectBook.value;
+    const NameBook = selectBook.options[selectBook.selectedIndex]?.text || '';
 
-            if (!idBook){
-                alert('select buku terlebih dahulu!!');
-                return;
-            }
+    if (!idBook) {
+        alert('Pilih buku terlebih dahulu!');
+        return;
+    }
 
-            //const no == count++
-            const no = tbody.querySelector)('tr').lenght +1;
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-            <td>${no}</td>
-            <td>${NameBook}</td>
-            <td><button class="btn btn-sm btn-danger">Hapus</button></td>
-            `;
-            console.log(tr);
-            tbody.appendChild(tr);
+    // Hitung jumlah baris sekarang
+    const no = tbody.querySelectorAll('tr').length + 1;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${no}</td>
+        <td>${NameBook}<input type="hidden" name="id_buku[]" value="${idBook}"></td>
+        <td><button type="button" class="btn btn-sm btn-danger delete-row">Hapus</button></td>
+    `;
+
+    tbody.appendChild(tr);
+});
+
+// Event delegation untuk tombol hapus
+document.querySelector('#tableTrans tbody').addEventListener('click', function (e) {
+    if (e.target.classList.contains('delete-row')) {
+        e.target.closest('tr').remove();
+
+        // Update nomor setelah hapus baris
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+            row.querySelector('td').textContent = index + 1;
         });
+    }
+});
+
     </script>
     <script>
         // variable

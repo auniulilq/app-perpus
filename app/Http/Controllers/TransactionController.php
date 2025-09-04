@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Book;
 use App\Models\Member;
 use App\Models\Borrows;
 use App\Models\Category;
-use App\Models\Book;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Models\DetailBorrows;
 
 class TransactionController extends Controller
 {
@@ -18,7 +19,8 @@ class TransactionController extends Controller
     public function index()
     {
         //
-        return view('admin.pinjam.index');
+        $borrows = Borrows::with('member','detailBorrows')->orderBy('id','desc')->get();
+        return view('admin.pinjam.index',compact('borrows'));
     } 
 
     /**
@@ -51,6 +53,30 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         //
+        DB::beginTransaction();
+        try {
+            $insertBorrow = Borrows::create([
+                'id_anggota'=> $request->id_anggota,
+                'trans_number'=> $request->trans_number,
+                'return_date'=> $request->return_date,
+                'note'=> $request->note,
+            ]);
+    
+            foreach ($request->id_buku as $key => $value){
+                DetailBorrows::create([
+                    'id_borrow' => $insertBorrow->id,
+                    'id_book' => $request->id_buku[$key],
+                ]);
+            }
+            //code...
+            DB::commit();
+            return redirect()->to('print-peminjam',$insertBorrow->id);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
+
+
     }
    
     /**
@@ -59,6 +85,8 @@ class TransactionController extends Controller
     public function show(string $id)
     {
         //
+        $borrows = Borrows::with('DetailBorrows.book','member')->find($id);
+        return view('admin.pinjam.show',compact('borrows'));
     }
 
     /**
@@ -93,5 +121,11 @@ class TransactionController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['status' => 'error', 'massage' => $th->getMessage()], 500);
         }
+    }
+
+    public function print($id_borrow)
+    {
+        $borrow = Borrows::with('member','detailBorrows.book')->find($id_borrow);
+        return view('admin.pinjam.print',compact('borrow'));
     }
 }
