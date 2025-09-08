@@ -14,11 +14,11 @@
                 <table class="table">
                     <tr>
                         <th>Nomor Transaksi</th>
-                        <td>{{$borrow->trans_number ?? ''}}</td>
+                        <td>{{$borrows->trans_number ?? ''}}</td>
                     </tr>
                     <tr>
                         <th>Tanggal Kembali</th>
-                        <td>{{\Carbon\Carbon::parse($borrow->return_date)->format('d-M-Y') ?? ''}}</td>
+                        <td>{{\Carbon\Carbon::parse($borrows->return_date)->format('d-M-Y') ?? ''}}</td>
                     </tr>
                 </table>
             </div>
@@ -31,19 +31,19 @@
                 <table class="table">
                     <tr>
                         <th>Nama Anggota</th>
-                        <td>{{$borrow->member->nama_anggota ?? ''}}</td>
+                        <td>{{$borrows->member->nama_anggota ?? ''}}</td>
                     </tr>
                     <tr>
                         <th>No Hp</th>
-                        <td>{{$borrow->member->no_hp ?? ''}}</td>
+                        <td>{{$borrows->member->no_hp ?? ''}}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>{{$borrow->member->email ?? ''}}</td>
+                        <td>{{$borrows->member->email ?? ''}}</td>
                     </tr>
                     <tr>
                         <th>Catatan</th>
-                        <td>{{$borrow->member->note ?? ''}}</td>
+                        <td>{{$borrows->member->note ?? ''}}</td>
                     </tr>
                 </table>
             </div>
@@ -62,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ( $borrow->detailBorrows as $index=> $detailBorrow)
+                        @foreach ($borrows->detailBorrows as $index=> $detailBorrow)
                         <tr>
                             <td>{{$index += 1}}</td>
                             <td>{{$detailBorrow->book->judul}}</td>

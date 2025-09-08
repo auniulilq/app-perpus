@@ -33,7 +33,8 @@
                     <a href="{{ url('buku/index') }}">
                         <i class="bi bi-circle"></i><span>Buku</span>
                     </a>
-                </li>       
+                </li>      
+            </ul> 
         </li><!-- End Components Nav -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('transaction.index') }}">

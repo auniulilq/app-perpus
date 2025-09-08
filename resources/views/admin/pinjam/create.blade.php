@@ -74,7 +74,7 @@
                             <label for="" class="form-label">Catatan</label>
                         </div>
                         <div class="col-sm-7 mb-3">
-                            <textarea name="note" id="" cols="30" rows="10" class="form-control"></textarea>
+                            <textarea name="note"  cols="30" rows="10" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>

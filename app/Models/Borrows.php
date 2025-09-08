@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Borrows extends Model
 {
     //
+    use SoftDeletes;
     protected $fillable = [
         'id_anggota',
         'trans_number',
@@ -15,6 +17,8 @@ class Borrows extends Model
         'status',
     ];
 
+    protected $date = ['delete_at'];
+    
     public function detailBorrows()
     {
         return $this->hasMany(DetailBorrows::class,'id_borrow','id'); 
