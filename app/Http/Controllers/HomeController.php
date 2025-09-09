@@ -12,23 +12,35 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
         $totalBooks = Book::count();
         $totalStock = Book::sum('stock');
 
-        //detail_buku ada tidak buku yang sedang di pinjam,actual_date = null
+        $borrowedBooks = DetailBorrows::with('book', 'borrow')
+            ->whereHas('borrow', function ($q) {
+                $q->whereNull('actual_return_date');
+            })->count();
 
+        $returnBooks = Borrows::where('status', 0)
+            ->whereNotNull('actual_return_date')->count();
 
-        $borrowedBooks = DetailBorrows::with('book','borrow')->whereHas('borrow',function($q){
-        $q->whereNull('actual_return_date');
-        })->count();
+        $notReturnBooks = Borrows::where('status', 1)
+            ->whereNull('actual_return_date')->count();
 
-        $returnBooks = Borrows::where('status',0)->Arr::whereNotNull('actual_return_date')->count();
-        $NotReturnBooks = Borrows::where('status',1)->whereNull('actual_return_date')->count();
+        $fines = Borrows::with('member')
+            ->where('fine', '>', 0)
+            ->get();
 
-        $fines = Borrows::with('member')->where('fine','>',0)->get();
         $totalFines = Borrows::sum('fine');
 
-        return view('admin.dashboard',compact('totalBooks','totalStock','borrowedBooks','returnBooks','notReturnBook','fines','totalFines'));
+        // cukup return sekali aja, di bawah
+        return view('admin.dashboard', compact(
+            'totalBooks',
+            'totalStock',
+            'borrowedBooks',
+            'returnBooks',
+            'notReturnBooks',
+            'fines',
+            'totalFines'
+        ));
     }
 }

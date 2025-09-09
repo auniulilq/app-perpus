@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AnggotaController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LocationController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\BookController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -57,9 +58,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('buku/destroy/{id}', [BookController::class, 'destroy'])->name('buku.destroy');
 
     // Transaksi
-    Route::resource('transaction', TransactionController::class);
+    Route::resource('transaction', TransactionController::class)->middleware('role:User');
     Route::get('get-buku/{id_category}', [TransactionController::class, 'getBukuByIdCategory']);
     Route::get('print-peminjam/{id}', action: [TransactionController::class, 'print'])->name('print-peminjam');
     Route::post('transaction/{id}/return',[App\Http\Controllers\TransactionController::class,'returnBook'])->name('transaction.return');
+
+    // Role
+    Route::resource('role', RoleController::class);
+    // User
+    Route::resource('user', App\Http\Controllers\UserController::class);
+    Route::get('user/{id}/roles', [App\Http\Controllers\UserController::class, 'editRole'])->name('user.editRole');
+    Route::post('user/{id}/roles', [App\Http\Controllers\UserController::class, 'updateRole'])->name('user.updateRole');
+
+    
 });
 
